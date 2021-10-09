@@ -14,7 +14,7 @@ import os
 from pathlib import Path
 
 PROJECT_DIR = os.path.join(os.path.dirname(__file__), '../')
-ROOT_GIT_DIR = os.path.join(PROJECT_DIR, '../')
+ROOT_GIT_DIR = os.path.join(PROJECT_DIR, '../../')
 
 
 dotenv_path = os.path.join(ROOT_GIT_DIR, '.env')
@@ -63,9 +63,9 @@ THIRD_PACKAGE_APPS = [
 INSTALLED_APPS = DJANGO_APPS + OUR_APPS + THIRD_PACKAGE_APPS
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -151,3 +151,5 @@ STATIC_URL = '/static/'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+CORS_ALLOW_ALL_ORIGINS = True
