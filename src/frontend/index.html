@@ -29,6 +29,44 @@
                 </table>
             </div>
         </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        Add user
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <label>
+                                Name
+                            </label>
+                            <input type="text" id="user_name" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                Address
+                            </label>
+                            <input type="text" id="user_address" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                Birthday
+                            </label>
+                            <input type="date" id="user_birthday" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="panel-footer">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <button type="button" id="updateButton" class="btn btn-primary" onclick="addClick();">
+                                    Add
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     <script>
         $(document).ready(function () {
@@ -88,12 +126,36 @@
         }
 
 
-        // Handle click event on Update button
-        function updateClick() {
-        }
+        // --------
+        //  Create
+        // --------
 
         // Handle click event on Add button
         function addClick() {
+            // Build user object from inputs
+            User = new Object();
+            User.name = $("#user_name").val();
+            User.address = $("#user_address").val();
+            User.birthday = $("#user_birthday").val();
+            userAdd(User);
+        }
+
+        function userAdd(user) {
+            var url = `http://localhost:8000/api/users/`;
+            // console.log(JSON.stringify(user));
+            // Call Web API to update user
+            $.ajax({
+                url: url,
+                type: 'POST',
+                contentType: "application/json;charset=utf-8",
+                data: JSON.stringify(user),
+                success: function (user) {
+                    userAddRow(user);
+                },
+                error: function (request, message, error) {
+                    handleException(request, message, error);
+                }
+            });
         }
 
         // Handle exceptions from AJAX calls
