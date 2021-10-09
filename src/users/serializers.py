@@ -6,6 +6,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:  # type: ignore
         model = User
         fields = [
+            'id',
             'name',
             'address',
             'birthday',

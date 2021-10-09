@@ -9,3 +9,10 @@ class UsersListCreateView(generics.ListCreateAPIView):
 
     def get_queryset(self):
         return User.objects.all()
+
+
+class UsersRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = UserSerializer
+
+    def get_queryset(self):
+        return User.objects.all()
