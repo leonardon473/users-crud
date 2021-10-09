@@ -17,7 +17,7 @@ class User(models.Model):
     )
 
     birthday = cast(
-        datetime,
+        'datetime',
         models.DateTimeField()
     )
 
