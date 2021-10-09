@@ -18,7 +18,7 @@ class User(models.Model):
 
     birthday = cast(
         'datetime',
-        models.DateTimeField()
+        models.DateField()
     )
 
     class Meta:  # type: ignore
