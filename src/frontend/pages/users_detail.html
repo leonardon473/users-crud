@@ -1,0 +1,205 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <title>User Detail</title>
+  <link href="../content/bootstrap.css" rel="stylesheet" />
+
+  <script src="../scripts/jquery-1.11.0.min.js"></script>
+  <script src="../scripts/bootstrap.min.js"></script>
+</head>
+
+<body>
+  <input type="hidden" id="user_id" value="0" />
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-6">
+        <h2>User detail</h2>
+        <p><a href="../index.html">All users list</a></p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="panel panel-primary">
+          <div class="panel-body">
+            <div class="form-group">
+              <label>
+                Name
+              </label>
+              <input type="text" class="form-control" id="name" />
+            </div>
+            <div class="form-group">
+              <label>
+                Address
+              </label>
+              <input type="text" class="form-control" id="address" />
+            </div>
+            <div class="form-group">
+              <label>
+                Birthday
+              </label>
+              <input type="date" class="form-control" id="birthday" />
+            </div>
+          </div>
+          <div class="panel-footer">
+            <div class="row">
+              <div class="col-xs-1">
+                <button type="button" id="updateButton" class="btn btn-primary" onclick="updateClick();">
+                  Update information
+                </button>
+              </div>
+
+              <div class="col-xs-10"></div>
+
+              <div class="col-xs-1">
+                <button type="button" id="deleteButton" class="btn btn-danger" onclick="deleteClick();"
+                  style="float: right;">
+                  Delete user
+                </button>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xs-12" id='alert-div'>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    function getParameterByName(name, url = window.location.href) {
+      name = name.replace(/[\[\]]/g, '\\$&');
+      var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+        results = regex.exec(url);
+      if (!results) return null;
+      if (!results[2]) return '';
+      return decodeURIComponent(results[2].replace(/\+/g, ' '));
+    }
+
+    $(document).ready(function () {
+      var user_id = getParameterByName('user_id');
+      console.log(user_id);
+      if (user_id) {
+        getUserDetail(user_id);
+      }
+      else {
+        alert('Param user_id not found');
+      }
+    });
+
+    // --------
+    //  Detail
+    // --------
+    function getUserDetail(id) {
+      // Store user id in hidden field
+      $("#user_id").val(id);
+
+      // Call Web API to get a User
+      $.ajax({
+        url: `http://localhost:8000/api/users/${id}/`,
+        type: 'GET',
+        dataType: 'json',
+        success: function (user) {
+          userToFields(user);
+        },
+        error: function (request, message, error) {
+          handleException(request, message, error);
+        }
+      });
+    }
+
+    function userToFields(user) {
+      $("#name").val(user.name);
+      $("#address").val(user.address);
+      $("#birthday").val(user.birthday);
+    }
+
+    // --------
+    //  Update
+    // --------
+
+    // Handle click event on Update button
+    function updateClick() {
+      // Build user object from inputs
+      User = new Object();
+      User.id = $("#user_id").val();
+      User.name = $("#name").val();
+      User.address = $("#address").val();
+      User.birthday = $("#birthday").val();
+      userUpdate(User);
+
+    }
+
+    function userUpdate(user) {
+      var url = `http://localhost:8000/api/users/${user.id}/`;
+      console.log(JSON.stringify(user));
+      // Call Web API to update user
+      $.ajax({
+        url: url,
+        type: 'PUT',
+        contentType: "application/json;charset=utf-8",
+        data: JSON.stringify(user),
+        success: function (user) {
+          userUpdateSuccess();
+        },
+        error: function (request, message, error) {
+          handleException(request, message, error);
+        }
+      });
+    }
+
+    function userUpdateSuccess() {
+      $("#alert-div").append(`
+        <div class="alert alert-success alert-dismissible fade in" role="alert" style="
+          margin-bottom: 0px;
+          margin-top: 10px;
+          ">
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+              aria-hidden="true">&times;</span></button>
+          Update completed.
+        </div>
+      `);
+    }
+
+    // --------
+    //  Delete
+    // --------
+
+    // Handle click event on Update button
+    function deleteClick() {
+      var id = $("#user_id").val();
+      userDelete(id);
+    }
+
+    function userDelete(id) {
+      // Call Web API to delete a product
+      $.ajax({
+        url: `http://localhost:8000/api/users/${id}/`,
+        type: 'DELETE',
+        success: function (product) {
+          window.location.replace("../index.html");
+        },
+        error: function (request, message, error) {
+          handleException(request, message, error);
+        }
+      });
+    }
+
+
+    // Handle exceptions from AJAX calls
+    function handleException(request, message, error) {
+      var msg = "";
+
+      msg += "Code: " + request.status + "\n";
+      msg += "Text: " + request.statusText + "\n";
+      if (request.responseJSON != null) {
+        msg += "Message" + request.responseJSON.Message + "\n";
+      }
+
+      alert(msg);
+    }
+  </script>
+</body>
+
+</html>
