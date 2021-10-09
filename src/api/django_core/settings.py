@@ -56,12 +56,14 @@ OUR_APPS = [
 ]
 
 THIRD_PACKAGE_APPS = [
+    'corsheaders',
     'rest_framework',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + OUR_APPS + THIRD_PACKAGE_APPS
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
